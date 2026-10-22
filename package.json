@@ -1,0 +1,37 @@
+{
+  "name": "pi-workspace",
+  "version": "0.1.0",
+  "type": "module",
+  "description": "An automatic right-side workspace overlay for the Pi coding agent",
+  "license": "MIT",
+  "author": "Fauzan Baig",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/grandimam/pi-workspace.git"
+  },
+  "homepage": "https://github.com/grandimam/pi-workspace#readme",
+  "bugs": { "url": "https://github.com/grandimam/pi-workspace/issues" },
+  "keywords": ["pi-package", "pi-extension", "workspace", "terminal"],
+  "files": ["src", "README.md", "LICENSE"],
+  "pi": { "extensions": ["./src/index.ts"] },
+  "engines": { "node": ">=22.19.0" },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "prepublishOnly": "npm run check && npm test"
+  },
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*",
+    "@earendil-works/pi-tui": "*"
+  },
+  "peerDependenciesMeta": {
+    "@earendil-works/pi-coding-agent": { "optional": true },
+    "@earendil-works/pi-tui": { "optional": true }
+  },
+  "devDependencies": {
+    "@earendil-works/pi-coding-agent": "0.80.6",
+    "@earendil-works/pi-tui": "0.80.6",
+    "@types/node": "^22.0.0",
+    "typescript": "^5.9.3"
+  }
+}
