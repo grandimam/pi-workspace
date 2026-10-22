@@ -1,6 +1,6 @@
 {
   "name": "@grandimam/pi-workspace",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" },
   "type": "module",
   "description": "A searchable workspace quick switcher and active-project footer for the Pi coding agent",
@@ -13,12 +13,13 @@
   "homepage": "https://github.com/grandimam/pi-workspace#readme",
   "bugs": { "url": "https://github.com/grandimam/pi-workspace/issues" },
   "keywords": ["pi-package", "pi-extension", "workspace", "terminal"],
-  "files": ["src", "assets", "README.md", "LICENSE"],
+  "files": ["src", "assets", "docs", "ROADMAP.md", "README.md", "LICENSE"],
   "pi": { "extensions": ["./src/index.ts"] },
   "engines": { "node": ">=22.19.0" },
   "scripts": {
     "check": "tsc --noEmit",
     "test": "node --experimental-strip-types --test tests/*.test.ts",
+    "test:tui": "python3 tests/tui-smoke.py",
     "prepublishOnly": "npm run check && npm test"
   },
   "peerDependencies": {
