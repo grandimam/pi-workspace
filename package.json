@@ -2,7 +2,7 @@
   "name": "pi-workspace",
   "version": "0.1.0",
   "type": "module",
-  "description": "An automatic right-side workspace overlay for the Pi coding agent",
+  "description": "A searchable workspace quick switcher and active-project footer for the Pi coding agent",
   "license": "MIT",
   "author": "Fauzan Baig",
   "repository": {
@@ -12,7 +12,7 @@
   "homepage": "https://github.com/grandimam/pi-workspace#readme",
   "bugs": { "url": "https://github.com/grandimam/pi-workspace/issues" },
   "keywords": ["pi-package", "pi-extension", "workspace", "terminal"],
-  "files": ["src", "README.md", "LICENSE"],
+  "files": ["src", "assets", "README.md", "LICENSE"],
   "pi": { "extensions": ["./src/index.ts"] },
   "engines": { "node": ">=22.19.0" },
   "scripts": {

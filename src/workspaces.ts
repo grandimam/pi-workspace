@@ -1,4 +1,4 @@
-import { realpath } from "node:fs/promises";
+import { realpath, stat } from "node:fs/promises";
 import { basename } from "node:path";
 
 export interface Workspace {
@@ -18,10 +18,18 @@ interface SessionRecord {
 export async function collectWorkspaces(
   sessions: SessionRecord[],
   cwd: string,
+  registeredPaths: string[] = [],
 ): Promise<Workspace[]> {
   const active = await realpath(cwd);
   const entries = new Map<string, Workspace>();
   entries.set(active, { path: active, name: basename(active) || active, modified: 0 });
+  for (const registered of registeredPaths) {
+    try {
+      const path = await realpath(registered);
+      if (!(await stat(path)).isDirectory()) continue;
+      if (!entries.has(path)) entries.set(path, { path, name: basename(path) || path, modified: 0 });
+    } catch { /* Keep stale registrations on disk, but omit missing directories. */ }
+  }
   for (const session of sessions) {
     let path: string;
     try { path = await realpath(session.cwd); } catch { continue; }
