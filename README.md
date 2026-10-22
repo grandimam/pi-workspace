@@ -14,7 +14,7 @@
 
 </div>
 
-![Pi Workspace picker with Add workspace above four projects, the active project marked, and keyboard shortcuts in the footer](assets/workspace-picker.png)
+![Pi Workspace picker with Add workspace above four projects, the active project marked, and keyboard shortcuts in the footer](https://raw.githubusercontent.com/grandimam/pi-workspace/main/assets/workspace-picker.png)
 
 <p align="center"><kbd>Ctrl</kbd> + <kbd>X</kbd> → find your project → <kbd>Enter</kbd> → continue working.</p>
 
@@ -33,7 +33,7 @@ You already have a conversation in one repository and work waiting in another. P
 Install globally so the extension stays available when you change projects:
 
 ```sh
-pi install git:github.com/grandimam/pi-workspace
+pi install npm:@grandimam/pi-workspace
 ```
 
 Then run **`/reload`** in an existing Pi session, or start `pi`.
@@ -45,7 +45,11 @@ Then run **`/reload`** in an existing Pi session, or start `pi`.
 > **Preview compatibility:** tested on macOS with `@earendil-works/pi-coding-agent` **0.80.6** and Node.js **22.23.2**. Requires Node.js **22.19+**. Older Pi versions are unsupported; Linux terminal behavior has not yet been verified.
 
 <details>
-<summary><strong>Installing from a local checkout?</strong></summary>
+<summary><strong>Prefer Git or a local checkout?</strong></summary>
+
+```sh
+pi install git:github.com/grandimam/pi-workspace
+```
 
 ```sh
 git clone https://github.com/grandimam/pi-workspace.git
@@ -66,7 +70,7 @@ No build step is required. Pi loads the TypeScript extension directly. Use a glo
 
 **Browse to it. You don't have to type the path.**
 
-![Pi Workspace directory browser showing parent navigation, Add this directory, and four sample project folders](assets/add-workspace.png)
+![Pi Workspace directory browser showing parent navigation, Add this directory, and four sample project folders](https://raw.githubusercontent.com/grandimam/pi-workspace/main/assets/add-workspace.png)
 
 1. Open the picker with **Ctrl+X**.
 2. Choose **＋ Add workspace…** at the top, or press **Ctrl+A**.
@@ -177,7 +181,7 @@ The `pi.extensions` manifest supports local-path, Git, and npm distribution. Pi 
 npm pack --dry-run
 ```
 
-No npm release has been published by these changes. Before publishing, check package-name availability and run the tests. Git installs only receive local changes after they are committed and pushed.
+The npm package is `@grandimam/pi-workspace`. Releases use `npm publish --access public`, which runs type checking and tests before publishing. Git installs only receive local changes after they are committed and pushed.
 
 </details>
 
@@ -186,6 +190,8 @@ No npm release has been published by these changes. Before publishing, check pac
 Use the same source you installed:
 
 ```sh
+pi remove npm:@grandimam/pi-workspace
+# Or, for a Git installation:
 pi remove git:github.com/grandimam/pi-workspace
 # Or, for a local installation:
 pi remove /absolute/path/to/pi-workspace

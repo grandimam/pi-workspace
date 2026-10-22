@@ -1,6 +1,7 @@
 {
-  "name": "pi-workspace",
+  "name": "@grandimam/pi-workspace",
   "version": "0.1.0",
+  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org/" },
   "type": "module",
   "description": "A searchable workspace quick switcher and active-project footer for the Pi coding agent",
   "license": "MIT",
