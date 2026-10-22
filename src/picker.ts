@@ -112,7 +112,7 @@ export class WorkspacePicker implements Component, Focusable {
           const count = this.sessions.filter((s) => s.workspace === item.path).length;
           choices.push({ value: item.path,
             label: `${item.path === this.activePath ? "●" : this.state.pinned.includes(item.path) ? "★" : " "} ${displayText(item.name)}`,
-            description: `${displayText(item.path)} · ${count ? `${count} sessions` : "New session"}` });
+            description: `${displayText(item.path)} · ${count ? `${count} session${count === 1 ? "" : "s"}` : "New session"}` });
         }
       }
     } else {
@@ -123,8 +123,8 @@ export class WorkspacePicker implements Component, Focusable {
         choices.push({ value: "new", label: "＋ New session", description: "Independent conversation in this project" });
       }
       for (const session of searchSessions(candidates, query, this.navigation?.contentSearch)) {
-        choices.push({ value: `session:${session.path}`, label: displayText(sessionTitle(session)),
-          description: `${this.mode === "search" ? `${displayText(basename(session.workspace))} · ` : ""}${session.modified.toISOString().slice(0, 16).replace("T", " ")} UTC` });
+        choices.push({ value: `session:${session.path}`, label: `${this.mode === "search" ? `${displayText(basename(session.workspace))} → ` : ""}${displayText(sessionTitle(session))}`,
+          description: `${session.modified.toISOString().slice(0, 16).replace("T", " ")} UTC${this.mode === "search" ? ` · ${displayText(session.workspace)}` : ""}` });
       }
       if (this.mode === "sessions" && query) choices.push({ value: "new", label: "＋ New session" });
     }
@@ -193,11 +193,20 @@ export class WorkspacePicker implements Component, Focusable {
     const label = contentWidth >= 20 ? "Search  " : "";
     const input = this.input.render(Math.max(1, contentWidth - label.length))[0] ?? "";
     const title = this.mode === "workspaces" ? "Switch workspace" : this.mode === "search" ? "Search all sessions" : `Sessions · ${displayText(this.destination?.name ?? "")}`;
-    const hint = this.mode === "workspaces" ? "↑↓ Move  Enter Sessions  ^A Add  ^P Pin  ^S Search  ^R Scan  Esc"
+    const hint = contentWidth < 28 ? "Enter  Esc" : this.mode === "workspaces"
+      ? contentWidth < 70 ? "↑↓  Enter  ^A  ^P  ^S  ^R  Esc" : "↑↓ Move  Enter Sessions  ^A Add  ^P Pin  ^S Search  ^R Scan  Esc"
       : "↑↓ Move  Enter Open  Esc Back";
-    const status = this.mode === "search" ? `project:name after:YYYY-MM-DD before:YYYY-MM-DD · ${this.navigation?.contentSearch ? "content enabled" : "metadata only"}` : this.message;
+    const footer = hint.split("  ").map((part) => {
+      const [key, ...words] = part.split(" ");
+      return this.theme.fg("accent", key) + (words.length ? ` ${this.theme.fg("dim", words.join(" "))}` : "");
+    }).join("  ");
+    const count = this.sessions.filter((s) => s.workspace === this.destination?.path).length;
+    const status = this.message || (this.mode === "search"
+      ? `project:name after:YYYY-MM-DD before:YYYY-MM-DD · ${this.navigation?.contentSearch ? "content enabled" : "metadata only"}`
+      : this.mode === "sessions" ? `${count} session${count === 1 ? "" : "s"} · ${this.destination?.path}`
+      : `${this.items.length} projects · ★ pinned · ● active`);
     return renderModal(this.theme, width, { title, top: this.theme.fg("dim", label) + input,
-      body: this.list.render(contentWidth), status: displayText(status), footer: this.theme.fg("dim", hint) });
+      body: this.list.render(contentWidth), status: displayText(status), footer });
   }
   invalidate(): void { this.input.invalidate(); this.list.invalidate(); this.browser?.invalidate(); }
   dispose(): void { this.browser?.dispose(); this.browser = undefined; }

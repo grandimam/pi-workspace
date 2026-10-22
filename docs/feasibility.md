@@ -1,6 +1,8 @@
 # Pi Workspace — Phase 0 API assessment
 
-Status: source/API review only; Phase 0 exit criterion is **not yet demonstrated**.
+Historical assessment for source 0.0.1. **Update for 0.2.0:** first-session creation, live runtime/tool A → B → A isolation, session menus, and TUI failure behavior now have executable tests. See [runtime-verification.md](runtime-verification.md) for current evidence and limitations. The original investigation below is retained as design history; its unresolved first-session conclusions are superseded by the tested header-only bridge. Automatic restoration on plain Pi startup remains outside scope.
+
+Original status: source/API review only; Phase 0 exit criterion was **not yet demonstrated**.
 
 Inspected installed `@earendil-works/pi-coding-agent` **0.80.6** on macOS.
 No claim of compatibility with older releases or Linux runtime testing.

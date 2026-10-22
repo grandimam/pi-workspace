@@ -93,11 +93,17 @@ with tempfile.TemporaryDirectory(prefix="", dir="/tmp") as directory, \
     setup = """
       import {SessionManager} from '@earendil-works/pi-coding-agent';
       import {writeFileSync} from 'node:fs';
-      console.log(JSON.stringify(process.argv.slice(1).map(cwd => {
+      const create = (cwd, name) => {
         const sm=SessionManager.create(cwd);
         writeFileSync(sm.getSessionFile(),JSON.stringify(sm.getHeader())+'\\n');
+        SessionManager.open(sm.getSessionFile()).appendSessionInfo(name);
         return sm.getSessionFile();
-      })));
+      };
+      const dirs = process.argv.slice(1);
+      const files = dirs.map((cwd, i) => create(cwd, ['Workspace navigation', 'Optimize HTTP request handling', 'ASGI cleanup', 'Knowledge search'][i]));
+      create(dirs[1], 'Investigate free-threading');
+      create(dirs[1], 'Fix benchmark regressions');
+      console.log(JSON.stringify(files));
     """
     files = json.loads(subprocess.check_output(
         ["node", "--input-type=module", "-e", setup, *[str(projects / name) for name in names]],
@@ -105,6 +111,10 @@ with tempfile.TemporaryDirectory(prefix="", dir="/tmp") as directory, \
     ))
     for index, file in enumerate(files):
         os.utime(file, (time.time() - index * 60, time.time() - index * 60))
+    (Path(agent_directory) / "agent" / "workspace-state.json").write_text(json.dumps({
+        "version": 1, "pinned": [str(projects / "karak")], "recent": [str(projects / "mitti")],
+        "sessions": {str(projects / "karak"): files[1]}, "discovered": [],
+    }))
     master, slave = pty.openpty()
     fcntl.ioctl(slave, termios.TIOCSWINSZ, struct.pack("HHHH", 36, 110, 0, 0))
     proc = subprocess.Popen(
@@ -131,6 +141,11 @@ with tempfile.TemporaryDirectory(prefix="", dir="/tmp") as directory, \
         os.write(master, b"\x18")  # Ctrl+X
         drain(1)
         save_modal(screen, "Switch workspace", ASSETS / "workspace-picker.png")
+        os.write(master, b"karak\r")  # Search pinned workspace → session menu
+        drain(1)
+        save_modal(screen, "Sessions", ASSETS / "workspace-sessions.png")
+        os.write(master, b"\x1b")
+        drain(0.5)
         os.write(master, b"\x01")  # Ctrl+A
         drain(1)
         save_modal(screen, "Add workspace", ASSETS / "add-workspace.png")

@@ -69,7 +69,7 @@ export default async function workspaceExtension(pi: ExtensionAPI) {
         const currentBranch = config.showBranch ? await gitBranch(cwd) : undefined;
         if (stopped) return;
         activePath = active; items = next; state = nextState; sessions = indexed; branch = currentBranch;
-        message = `${items.length} projects · ★ pinned · ● active`;
+        message = "";
       } catch (error) { if (!stopped) message = `Cannot load workspaces: ${String(error)}`; }
       finally { if (!stopped) { updatePicker(); status(ctx); } }
     })().finally(() => { refreshTask = undefined; });
